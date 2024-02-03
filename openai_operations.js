@@ -33,7 +33,7 @@ export class OpenAIOperations {
                 model: this.model_name,
                 messages: this.messages,
                 temperature: 1,
-                max_tokens: 256,
+                max_tokens: 100,
                 top_p: 1,
                 frequency_penalty: 0,
                 presence_penalty: 0,
@@ -56,31 +56,5 @@ export class OpenAIOperations {
         }
     }
 
-    async make_openai_call_completion(text) {
-        try {
-            const response = await this.openai.completions.create({
-              model: "text-davinci-003",
-              prompt: text,
-              temperature: 1,
-              max_tokens: 256,
-              top_p: 1,
-              frequency_penalty: 0,
-              presence_penalty: 0,
-            });
 
-            // Check if response has choices
-            if (response.choices) {
-                let agent_response = response.choices[0].text;
-                console.log(`Agent Response: ${agent_response}`);
-                return agent_response;
-            } else {
-                // Handle the case when no choices are returned
-                throw new Error("No choices returned from openai");
-            }
-        } catch (error) {
-            // Handle any errors that may occur
-            console.error(error);
-            return "Sorry, something went wrong. Please try again later.";
-        }
-    }
 }
