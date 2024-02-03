@@ -20,20 +20,17 @@ export class OpenAIOperations {
         }
     }
 
-    async make_openai_call(text) {
+  async make_openai_call(text) {
     try {
         // Create a new array for each API call
-        const messages = [...this.messages];
-
-        // Add user message to the new array
-        messages.push({ role: "user", content: text });
+        const messages = [{ role: "system", content: this.messages[0].content }, { role: "user", content: text }];
 
         // Check if message history is exceeded
         this.check_history_length(messages);
 
         // Use await to get the response from OpenAI
         const response = await this.openai.chat.completions.create({
-            model: this.model_name,
+            model: "gpt-3.5-turbo",
             messages: messages,
             temperature: 1,
             max_tokens: 50,
@@ -47,8 +44,9 @@ export class OpenAIOperations {
             let agent_response = response.choices[0].message.content;
             console.log(`Agent Response: ${agent_response}`);
 
-            // Add assistant's response to the new array
-            messages.push({ role: "assistant", content: agent_response });
+            // Send the assistant's response to the Twitch chat
+            // Replace the following line with your Twitch chat sending logic
+            this.sendToTwitchChat(agent_response);
 
             return agent_response;
         } else {
