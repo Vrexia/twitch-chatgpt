@@ -20,10 +20,13 @@ export class OpenAIOperations {
         }
     }
 
- async make_openai_call(text) {
+async make_openai_call(text) {
     try {
-        // Only add the user message to messages
-        this.messages = [{ role: "user", content: text }];
+        // Add user message to messages
+        this.messages.push({ role: "user", content: text });
+
+        // Check if message history is exceeded
+        this.check_history_length();
 
         // Use await to get the response from openai
         const response = await this.openai.chat.completions.create({
@@ -40,6 +43,8 @@ export class OpenAIOperations {
         if (response.choices) {
             let agent_response = response.choices[0].message.content;
             console.log(`Agent Response: ${agent_response}`);
+            // Replace all messages with the latest assistant response
+            this.messages = [{ role: "assistant", content: agent_response }];
             return agent_response;
         } else {
             // Handle the case when no choices are returned
