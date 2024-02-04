@@ -79,7 +79,7 @@ if (!ENABLE_CHANNEL_POINTS) {
 }
 
 // init global variables
-const MAX_LENGTH = 399
+const MAX_LENGTH = 200
 let file_context = "You are a helpful Twitch Chatbot."
 let last_user_message = ""
 
