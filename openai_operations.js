@@ -41,14 +41,18 @@ export class OpenAIOperations {
 
             // Check if response has choices
             if (response.choices) {
-                let agent_response = response.choices[0].message.content;
-                console.log(`Agent Response: ${agent_response}`);
-                this.messages.push({role: "assistant", content: agent_response});
-                return agent_response;
-            } else {
-                // Handle the case when no choices are returned
-                throw new Error("No choices returned from openai");
-            }
+            let agent_response = response.choices[0].message.content;
+            
+            // Trim the response to fit within the specified max tokens
+            agent_response = this.trimResponseToFit(agent_response, 75);  // Adjust the maximum number of tokens
+
+            console.log(`Agent Response: ${agent_response}`);
+            this.messages.push({ role: "assistant", content: agent_response });
+            return agent_response;
+        } else {
+            // Handle the case when no choices are returned
+            throw new Error("No choices returned from OpenAI");
+        }
         } catch (error) {
             // Handle any errors that may occur
             console.error(error);
@@ -56,6 +60,18 @@ export class OpenAIOperations {
         }
     }
 
+    trimResponseToFit(response, maxTokens) {
+    // Split the response into tokens
+    const tokens = response.split(" ");
+
+    // Trim the response to fit within the specified max tokens
+    if (tokens.length > maxTokens) {
+        response = tokens.slice(0, maxTokens).join(" ") + " ...";
+    }
+
+    return response;
+}
+    
     async make_openai_call_completion(text) {
         try {
             const response = await this.openai.completions.create({
@@ -68,15 +84,19 @@ export class OpenAIOperations {
               presence_penalty: 0,
             });
 
-            // Check if response has choices
-            if (response.choices) {
-                let agent_response = response.choices[0].text;
-                console.log(`Agent Response: ${agent_response}`);
-                return agent_response;
-            } else {
-                // Handle the case when no choices are returned
-                throw new Error("No choices returned from openai");
-            }
+           if (response.choices) {
+            let agent_response = response.choices[0].message.content;
+            
+            // Trim the response to fit within the specified max tokens
+            agent_response = this.trimResponseToFit(agent_response, 75);  // Adjust the maximum number of tokens
+
+            console.log(`Agent Response: ${agent_response}`);
+            this.messages.push({ role: "assistant", content: agent_response });
+            return agent_response;
+        } else {
+            // Handle the case when no choices are returned
+            throw new Error("No choices returned from OpenAI");
+        }
         } catch (error) {
             // Handle any errors that may occur
             console.error(error);
