@@ -37,7 +37,7 @@ if (!GPT_MODE) {
     GPT_MODE = "CHAT"
 }
 if (!HISTORY_LENGTH) {
-    HISTORY_LENGTH = 10
+    HISTORY_LENGTH = 5
 }
 if (!OPENAI_API_KEY) {
     console.log("No OPENAI_API_KEY found. Please set it as environment variable.")
@@ -46,7 +46,7 @@ if (!MODEL_NAME) {
     MODEL_NAME = "gpt-3.5-turbo"
 }
 if (!TWITCH_USER) {
-    TWITCH_USER = "tawebot"
+    TWITCH_USER = "oSetinhasBot"
     console.log("No TWITCH_USER found. Using oSetinhasBot as default.")
 }
 if (!TWITCH_AUTH) {
@@ -56,14 +56,14 @@ if (!TWITCH_AUTH) {
     console.log("No TWITCH_AUTH found. Using oSetinhasBot auth as default.")
 }
 if (!COMMAND_NAME) {
-    COMMAND_NAME = ["!tawebot"]
+    COMMAND_NAME = ["!gpt"]
 } else {
     // split commands by comma into array
     COMMAND_NAME = COMMAND_NAME.split(",")
 }
 COMMAND_NAME = COMMAND_NAME.map(function(x){ return x.toLowerCase() })
 if (!CHANNELS) {
-    CHANNELS = ["tawebot", "jones88"]
+    CHANNELS = ["oSetinhas", "jones88"]
 } else {
     // split channels by comma into array
     CHANNELS = CHANNELS.split(",")
@@ -75,11 +75,11 @@ if (!ENABLE_TTS) {
     ENABLE_TTS = "false"
 }
 if (!ENABLE_CHANNEL_POINTS) {
-    ENABLE_CHANNEL_POINTS = "true";
+    ENABLE_CHANNEL_POINTS = "false";
 }
 
 // init global variables
-const MAX_LENGTH = 200
+const MAX_LENGTH = 399
 let file_context = "You are a helpful Twitch Chatbot."
 let last_user_message = ""
 
@@ -124,8 +124,8 @@ bot.onMessage(async (channel, user, message, self) => {
     if (self) return;
 
     if (ENABLE_CHANNEL_POINTS) {
-        console.log(`The message id is ${user["cf266d3e-4c06-4b83-87e0-a191e47de6f4"]}`);
-        if (user["cf266d3e-4c06-4b83-87e0-a191e47de6f4"] === "Ask Tawebot") {
+        console.log(`The message id is ${user["msg-id"]}`);
+        if (user["msg-id"] === "highlighted-message") {
             console.log(`The message is ${message}`);
             const response = await openai_ops.make_openai_call(message);
             bot.say(channel, response);
@@ -145,7 +145,12 @@ bot.onMessage(async (channel, user, message, self) => {
         // split response if it exceeds twitch chat message length limit
         // send multiples messages with a delay in between
         if (response.length > MAX_LENGTH) {
-             response = response.substring(0, MAX_LENGTH);
+            const messages = response.match(new RegExp(`.{1,${MAX_LENGTH}}`, "g"));
+            messages.forEach((message, index) => {
+                setTimeout(() => {
+                    bot.say(channel, message);
+                }, 1000 * index);
+            });
         } else {
             bot.say(channel, response);
         }
