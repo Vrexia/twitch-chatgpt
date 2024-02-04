@@ -37,7 +37,7 @@ if (!GPT_MODE) {
     GPT_MODE = "CHAT"
 }
 if (!HISTORY_LENGTH) {
-    HISTORY_LENGTH = 5
+    HISTORY_LENGTH = 10
 }
 if (!OPENAI_API_KEY) {
     console.log("No OPENAI_API_KEY found. Please set it as environment variable.")
@@ -46,7 +46,7 @@ if (!MODEL_NAME) {
     MODEL_NAME = "gpt-3.5-turbo"
 }
 if (!TWITCH_USER) {
-    TWITCH_USER = "oSetinhasBot"
+    TWITCH_USER = "tawebot"
     console.log("No TWITCH_USER found. Using oSetinhasBot as default.")
 }
 if (!TWITCH_AUTH) {
@@ -56,14 +56,14 @@ if (!TWITCH_AUTH) {
     console.log("No TWITCH_AUTH found. Using oSetinhasBot auth as default.")
 }
 if (!COMMAND_NAME) {
-    COMMAND_NAME = ["!gpt"]
+    COMMAND_NAME = ["!tawebot"]
 } else {
     // split commands by comma into array
     COMMAND_NAME = COMMAND_NAME.split(",")
 }
 COMMAND_NAME = COMMAND_NAME.map(function(x){ return x.toLowerCase() })
 if (!CHANNELS) {
-    CHANNELS = ["oSetinhas", "jones88"]
+    CHANNELS = ["tawebot", "jones88"]
 } else {
     // split channels by comma into array
     CHANNELS = CHANNELS.split(",")
@@ -75,11 +75,11 @@ if (!ENABLE_TTS) {
     ENABLE_TTS = "false"
 }
 if (!ENABLE_CHANNEL_POINTS) {
-    ENABLE_CHANNEL_POINTS = "false";
+    ENABLE_CHANNEL_POINTS = "true";
 }
 
 // init global variables
-const MAX_LENGTH = 100
+const MAX_LENGTH = 200
 let file_context = "You are a helpful Twitch Chatbot."
 let last_user_message = ""
 
