@@ -79,7 +79,7 @@ if (!ENABLE_CHANNEL_POINTS) {
 }
 
 // init global variables
-const MAX_LENGTH = 200
+const MAX_LENGTH = 399
 let file_context = "You are a helpful Twitch Chatbot."
 let last_user_message = ""
 
@@ -142,7 +142,16 @@ bot.onMessage(async (channel, user, message, self) => {
         // make openai call
         const response = await openai_ops.make_openai_call(text);
 
-       else {
+        // split response if it exceeds twitch chat message length limit
+        // send multiples messages with a delay in between
+        if (response.length > MAX_LENGTH) {
+            const messages = response.match(new RegExp(`.{1,${MAX_LENGTH}}`, "g"));
+            messages.forEach((message, index) => {
+                setTimeout(() => {
+                    bot.say(channel, message);
+                }, 1000 * index);
+            });
+        } else {
             bot.say(channel, response);
         }
         if (ENABLE_TTS === "true") {
