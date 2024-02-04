@@ -79,7 +79,7 @@ if (!ENABLE_CHANNEL_POINTS) {
 }
 
 // init global variables
-const MAX_LENGTH = 399
+const MAX_LENGTH = 300
 let file_context = "You are a helpful Twitch Chatbot."
 let last_user_message = ""
 
@@ -145,12 +145,7 @@ bot.onMessage(async (channel, user, message, self) => {
         // split response if it exceeds twitch chat message length limit
         // send multiples messages with a delay in between
         if (response.length > MAX_LENGTH) {
-            const messages = response.match(new RegExp(`.{1,${MAX_LENGTH}}`, "g"));
-            messages.forEach((message, index) => {
-                setTimeout(() => {
-                    bot.say(channel, message);
-                }, 1000 * index);
-            });
+             response = response.substring(0, MAX_LENGTH);
         } else {
             bot.say(channel, response);
         }
