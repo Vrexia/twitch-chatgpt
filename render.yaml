@@ -22,7 +22,7 @@ services:
       - key: TWITCH_USER  # https://dev.twitch.tv/console
         value: "tawebot"
       - key: TWITCH_AUTH  # https://twitchapps.com/tmi/
-        value: "oauth:154qplng6i5of6rhx7cntfi3bzt1es"
+        value: "oauth:"
       - key: SEND_USERNAME
         value: "true"
       - key: ENABLE_TTS
